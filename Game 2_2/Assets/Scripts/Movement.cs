@@ -5,9 +5,13 @@ using UnityEngine;
 public class Movement : MonoBehaviour {
 	public float speed;
 	private Rigidbody player;
+	public float timeJump;
+	private float recover;
 	// Use this for initialization
 	void Awake () {
 		player = GetComponent<Rigidbody> ();
+		recover = timeJump;
+		timeJump = 0;
 	}
 	void Start () {
 		
@@ -20,7 +24,12 @@ public class Movement : MonoBehaviour {
 	void FixedUpdate () {
 		float hor = Input.GetAxis ("Horizontal");
 		float ver = Input.GetAxis ("Vertical");
-		float jump = Input.GetAxis ("Jump");
+		float jump = 0;
+		if (!Input.GetKey(KeyCode.LeftShift)){
+			jump = Input.GetAxis ("Jump");
+			timeJump = recover;
+		}
+		timeJump -= Time.deltaTime;
 		player.MovePosition (transform.position + new Vector3 (hor, jump, ver) * speed * Time.deltaTime);
 	}
 }
